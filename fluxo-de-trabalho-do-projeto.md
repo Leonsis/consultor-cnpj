@@ -20,7 +20,7 @@ Antes de iniciar qualquer alteração, o colaborador deve criar uma nova branch 
 ### 📛 Padrão de nomenclatura da branch
 
 ```
-{tipo}-{dia}{mes}-{nome-do-arquivo}
+{tipo}-{dia}{mes}-{nome-do-arquivo ou nomda da funcionalidade}
 ```
 
 ### 🔖 Tipos permitidos

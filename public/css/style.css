@@ -1,0 +1,65 @@
+.body-class{
+    background-color: #001f3f !important;
+}
+
+.main-column-cor{
+    background-color: #e8e8e8;
+} 
+
+.h1-column-style{
+    text-shadow: 4px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.hr-style{
+    color: rgb(171, 171, 171);
+}
+
+.column-specific-styles{
+    background-color: rgb(211, 211, 211); 
+    border-radius: 10px; 
+    height: 250px;
+}
+
+.column-variate-styles{
+    background-color: #e8e8e8;
+}
+
+.labels-inputs-styles{
+    background-color: #e8e8e8;
+}
+
+.input-class-styles{
+    width: 40px; 
+    height: 40px;
+}
+
+.button-class-styles{
+    background-color: #001f3f; 
+    height: 33px; 
+}
+
+.image-class-styles{
+    width: 55%;
+}
+
+  @media(max-width: 991px) {
+            .image-one{
+                margin-bottom: 20px;
+            }
+            
+            .image-two{
+                margin-top: 20px;
+
+            }     
+        }
+
+    @media(max-width: 575px) {
+         .image-two-small{
+            margin-top: 15px;
+         }
+    }
+    @media(max-width: 575px){
+        .check-box-size{
+            font-size: 11px;
+        }
+    }      

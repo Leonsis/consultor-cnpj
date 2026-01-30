@@ -23,13 +23,13 @@
                 <img src="assets/Captura de tela 2026-01-28 091221.png" class="img-fluid" alt="Logo-WTR">
             </div>
 
-            <form class="col-lg-4 col-md-12">
-                <div class="p-2 column-specific-styles">
+            <form id="form" class="col-lg-4 col-md-12">
+                <div class="p-2 column-specific-styles" action="backend\consultar-cnpj.php" method="POST">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Insira o número do CNPJ ou CPF abaixo:</label>
-                        <input type="text" id="mainInput"
+                        <input type="text" id="mainInput" name="cnpjCpf"
                             class="form-control w-75 mx-auto border-dark rounded column-variate-styles"
-                            placeholder="00.000.000/0000-00">
+                            placeholder="00.000.000/0000-00" required>
                     </div>
 
                     <div class="d-flex align-items-center border border-dark rounded p-3 w-75 mx-auto labels-inputs-styles">
@@ -39,7 +39,7 @@
                         <label for="opcao1" class="ms-1 mb-0 fw-semibold check-box-size">Não sou um robô</label>
                     </div>
 
-                    <button class="mt-3 w-75 mx-auto text-white fw-bold rounded-pill button-class-styles">
+                    <button type="submit" class="mt-3 w-75 mx-auto text-white fw-bold rounded-pill button-class-styles">
                         Consultar
                     </button>
                 </div>
@@ -53,8 +53,54 @@
             </div>
 
         </div>
+
+        <div id="result" class="text-white">
+
+        </div>
     </div>
     <script src="js/script.js"></script>
+    <script>
+        // Ajax
+        document.getElementById('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            const response = await fetch('/Caio/backend/consultar-cnpj.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            // DEBUG
+            const text = await response.text();
+            /* console.log('Retorno bruto:', text); */
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                alert('Erro: resposta inválida do servidor');
+                return;
+            }
+
+            const elementResult = document.getElementById('result');
+            console.log(elementResult);
+
+            // erro tratado
+            if (result.erro) {
+                elementResult.textContent = result.mensagem;
+                return;
+            }
+
+            // sucesso
+            elementResult.innerHTML = `
+                <strong>Razão Social:</strong> ${result.razao_social}<br>
+                <strong>CNPJ:</strong> ${result.cnpj}<br>
+                <strong>Situação:</strong> ${result.situacao_cadastral}
+            `;
+        });
+
+    </script>
 </body>
 
 </html>

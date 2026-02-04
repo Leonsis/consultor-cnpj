@@ -32,7 +32,8 @@
                             placeholder="00.000.000/0000-00" required>
                     </div>
 
-                    <div class="d-flex align-items-center border border-dark rounded p-3 w-75 mx-auto labels-inputs-styles">
+                    <div
+                        class="d-flex align-items-center border border-dark rounded p-3 w-75 mx-auto labels-inputs-styles">
                         <input type="checkbox" id="opcao1"
                             class="form-check-input border-dark m-0 labels-inputs-styles input-class-styles"
                             name="interesse" value="newsletter">
@@ -54,19 +55,47 @@
 
         </div>
 
-        <div id="result" class="text-white">
 
+
+        <div class="vstack gap-2 main-column-cor rounded" id="divPrincipal" style="display: none;"> <!-- deixar display none -->
+            <div class="container">
+                <h1 class="text-center p-2 dark-blue-color">Consulta de CPF/CNPJ</h1>
+
+                <div class="alert alert-light text-dark w-87 m-auto border-2 border-dark mb-3 mt-3" role="alert">
+                    <strong>Atenção:</strong> As informações desta página são públicas e podem ser utilizadas por todos,
+                    sem necessidade de autorização. O compartilhamento destas informações está em conformidade com o
+                    Decreto
+                    nº 8.777/2016 (Política de Dados Abertos do Poder Executivo Federal) e a Lei Geral de Proteção de
+                    Dados
+                    (LGPD).
+                    Informamos que a atualização da nossa base de dados ocorre a cada 30 dias, podendo não refletir
+                    mudanças
+                    recentes no CNPJ consultado.
+                </div>
+
+                <div id="result">
+
+
+
+
+
+                </div>
+            </div>
         </div>
+
+
     </div>
     <script src="js/script.js"></script>
     <script>
         // Ajax
         document.getElementById('form').addEventListener('submit', async function (e) {
             e.preventDefault();
+            
 
             const formData = new FormData(e.target);
 
-            const response = await fetch('/Caio/backend/consultar-cnpj.php', {
+            // ESTA ROTA DEVE SER MODIFICADA COM BASE NA SUA ESTRUTURA DE PASTA!  
+            const response = await fetch('/Projetos/consultor-cnpj/backend/consultar-cnpj.php', {
                 method: 'POST',
                 body: formData
             });
@@ -79,25 +108,155 @@
             try {
                 result = JSON.parse(text);
             } catch (e) {
-                alert('Erro: resposta inválida do servidor');
+                alert('Erro: resposta inválida do servidor\n Maus detalhes no console.');
+                console.log('Erro:' + e);
                 return;
             }
 
             const elementResult = document.getElementById('result');
-            console.log(elementResult);
+            
+            
+            if(elementResult.innerHTML.trim() !== "") {                
+                elementResult.innerHTML = '';
+            }
+
+            document.getElementById("divPrincipal").style.display = "flex";
+
+            const table1 = document.createElement("table");
+            table1.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'rounded' );
+
+            const thead1 = document.createElement("thead");
+            thead1.classList.add('custom-header');
+
+            const tr1 = document.createElement("tr");
+
+            const td1 = document.createElement("td");
+            td1.classList.add('custom-header');
 
             // erro tratado
             if (result.erro) {
-                elementResult.textContent = result.mensagem;
+                td1.innerHTML = `<b>${result.mensagem}</b>`;
+
+
+                tr1.appendChild(td1);
+                thead1.appendChild(tr1);
+                table1.appendChild(tr1);
+                elementResult.appendChild(table1);
                 return;
             }
 
             // sucesso
-            elementResult.innerHTML = `
-                <strong>Razão Social:</strong> ${result.razao_social}<br>
-                <strong>CNPJ:</strong> ${result.cnpj}<br>
-                <strong>Situação:</strong> ${result.situacao_cadastral}
-            `;
+            td1.innerHTML = `<b>${result.razao_social}</b>`
+
+            tr1.appendChild(td1);
+            thead1.appendChild(tr1);
+            table1.appendChild(thead1);
+
+            const tr2 = document.createElement("tr");
+            const td2 = document.createElement("td");
+            const div1 = document.createElement("div");
+            div1.classList.add('text-black');
+            div1.innerHTML = `<b>CNPJ:</b> ${result.cnpj.replace(
+                /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+                "$1.$2.$3/$4-$5"
+            )}`
+
+            tr2.appendChild(td2);
+            td2.appendChild(div1);
+            table1.appendChild(tr2);
+
+            elementResult.appendChild(table1);
+
+            const table2 = document.createElement("table");
+            table2.classList.add('table', 'table-striped', 'table-bordered', 'table-hover');
+
+
+            const thead2 = document.createElement("thead");
+            thead2.classList.add('custom-header');
+
+            const tr3 = document.createElement("tr");
+
+            //const td3 = document.createElement("td");
+
+            const th1 = document.createElement("th");
+            th1.colSpan = "2";
+            th1.classList.add("custom-header")
+            th1.innerHTML = 'Cartão CNPJ'
+
+            table2.appendChild(thead2);
+            thead2.appendChild(tr3);
+            tr3.appendChild(th1);
+            elementResult.appendChild(table2);
+
+            const tbody = document.createElement("tbody");
+
+            const tr4 = document.createElement("tr");
+
+            const td3 = document.createElement("td");
+            td3.innerHTML = `<b>Razão social:</b> ${result.razao_social}`;
+
+            var situacaoCadastral = result.situacao_cadastral;
+
+            if(result.situacao_cadastral === 1 ){
+                situacaoCadastral = "Empresa Nula";
+            }else if(result.situacao_cadastral === 2){
+                situacaoCadastral = "Empresa Ativa";
+            }else if(result.situacao_cadastral === 3){
+                situacaoCadastral = "Empresa Suspensa";
+            }else if(result.situacao_cadastral === 4){
+                situacaoCadastral = "Empresa Inapta";
+            }else if(result.situacao_cadastral === 8){
+                situacaoCadastral = "Empresa Baixada";
+            } 
+
+            const td4 = document.createElement("td");
+            td4.innerHTML = `<b>Situação Cadastral:</b> ${situacaoCadastral}`
+
+            table2.appendChild(tbody);
+            tbody.appendChild(tr4);
+            tr4.appendChild(td3);
+            tr4.appendChild(td4);
+            elementResult.appendChild(table2);
+
+           /*  const dataApi = result.data_inicio_atividade;
+            const dataFormatoBr = dataApi.toLocaleDateString('pt-BR'); */
+
+            const dataExibicao = result.data_inicio_atividade 
+                ? new Date(result.data_inicio_atividade.replace(/-/g, '\/')).toLocaleDateString('pt-BR') 
+                : "Não informada";
+
+            const tbody2 = document.createElement("tbody");
+            const tr5 = document.createElement("tr");
+            tr5.innerHTML = `<td><b>Data abertura:</b> ${dataExibicao} </td><td><b>Natureza jurídica:</b> ${result.natureza_juridica}</td>`;
+            tbody2.appendChild(tr5);
+            table2.appendChild(tbody2);
+
+            var emailExibicao = result.emai; 
+            if(result.email === null || result.email === ""){
+                emailExibicao = "Nenhum e-mail associado ao CNPJ."
+            }
+
+            const tbody3 = document.createElement("tbody");
+            const tr6 = document.createElement("tr");
+            tr6.innerHTML = `<td><b>Capital social:</b> ${result.capital_social}</td><td><b>E-mail:</b> ${emailExibicao}</td>`;
+            tbody3.appendChild(tr6);
+            table2.appendChild(tbody3);
+
+
+            const tbody4 = document.createElement("tbody");
+            const tr7 = document.createElement("tr");
+            tr7.innerHTML = `<td><b>Telefone:</b> ${result.ddd_telefone_1}</td><td><b>CNAE:</b> ${result.cnae_fiscal}</td>`;
+            tbody4.appendChild(tr7);
+            table2.appendChild(tbody4);
+
+           
+
+
+            
+            /* elementResult.innerHTML = `
+                ${result.razao_social}
+                ${result.situacao_cadastral}
+            `; */
         });
 
     </script>

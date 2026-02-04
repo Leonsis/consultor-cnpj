@@ -62,4 +62,19 @@
         .check-box-size{
             font-size: 11px;
         }
-    }      
+    }  
+    
+    
+
+.w-87 {
+  width: 87% !important; /* !important ensures it overrides other Bootstrap utilities */
+}    
+
+.dark-blue-color{
+    color: #001f3f;
+}
+
+.custom-header {
+    --bs-table-bg: #001f3f !important; /* Sua cor específica */
+    color: white !important;           /* Garante que o texto fique legível */
+}

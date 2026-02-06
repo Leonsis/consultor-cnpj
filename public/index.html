@@ -108,17 +108,54 @@
             try {
                 result = JSON.parse(text);
             } catch (e) {
-                alert('Erro: resposta inválida do servidor\n Maus detalhes no console.');
+                alert('Erro: resposta inválida do servidor\n Mais detalhes no console.');
                 console.log('Erro:' + e);
                 return;
             }
+            
+            /*  var tentativa = document.getElementById("mainInput").value;
+             console.log(tentativa.length);
+            */
+        
+        //if(document.getElementById("mainInput").value.lenght === 18){
+         //   console.log("Teste");
+         
+             
+ 
+            const elementResult = document.getElementById('result');
+            document.getElementById("divPrincipal").style.display = "flex";
 
+            if(elementResult.innerHTML.trim() !== "") {                
+                elementResult.innerHTML = '';
+            };
+
+            const table1 = document.createElement("table");
+            table1.classList.add('table', 'table-hover', 'border-success', 'shadow-sm');
+
+            const thead1 = document.createElement("thead");
+            thead1.classList.add('custom-header');
+
+            const tr1 = document.createElement("tr");
+
+            const td0 = document.createElement("td");
+            td0.classList.add('custom-header', 'd-flex', 'align-items-center', 'justify-content-center');
+
+         if(result.tipo === 'CPF'){
+             td0.innerHTML = ` <b>${result.mensagem}</b>`;
+
+                tr1.appendChild(td0);
+                thead1.appendChild(tr1);
+                table1.appendChild(tr1);
+                elementResult.appendChild(table1);
+                return;
+
+         } else {
             const elementResult = document.getElementById('result');
             
             
             if(elementResult.innerHTML.trim() !== "") {                
                 elementResult.innerHTML = '';
-            }
+            } 
 
             document.getElementById("divPrincipal").style.display = "flex";
 
@@ -136,7 +173,6 @@
             // erro tratado
             if (result.erro) {
                 td1.innerHTML = `<b>${result.mensagem}</b>`;
-
 
                 tr1.appendChild(td1);
                 thead1.appendChild(tr1);
@@ -248,17 +284,19 @@
             tr7.innerHTML = `<td><b>Telefone:</b> ${result.ddd_telefone_1}</td><td><b>CNAE:</b> ${result.cnae_fiscal}</td>`;
             tbody4.appendChild(tr7);
             table2.appendChild(tbody4);
+         
+          
 
-           
 
-
-            
+        }   
             /* elementResult.innerHTML = `
                 ${result.razao_social}
                 ${result.situacao_cadastral}
-            `; */
-        });
-
+              `; */
+       });
+         
+            
+ 
     </script>
 </body>
 

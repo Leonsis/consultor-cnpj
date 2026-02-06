@@ -76,5 +76,9 @@
 
 .custom-header {
     --bs-table-bg: #001f3f !important; /* Sua cor específica */
+    color: white !important;
+}
+
+table td.custom-header b{
     color: white !important;           /* Garante que o texto fique legível */
 }

@@ -56,11 +56,14 @@ if ($tamanho === 11) {
         exit;
     }
 
-    $url = "https://brasilapi.com.br/api/cnpj/v1/$$valorDigitado";
+    //$url = "https://brasilapi.com.br/api/cnpj/v1/$valorDigitado";
+
+    $url = "https://minhareceita.org/$valorDigitado";
+   // var_dump($url);
 
     $maxTentativas         = 3;
     $tentativaAtual        = 0;
-    $esperaEntreTentativas = 1; // segundos
+    $esperaEntreTentativas = 1; // Espera de tantativas em segundos
 
     while ($tentativaAtual < $maxTentativas) {
         $ch = curl_init($url);
@@ -83,8 +86,12 @@ if ($tamanho === 11) {
         } elseif ($httpCode === 404) {
             echo json_encode(['erro' => true, 'mensagem' => 'CNPJ não encontrado']);
             exit;
-        } else {
+        } elseif ($httpCode === 400) {
+            echo 'Sintaxe ou dados incorretos, verifique e tente novamente';
             break; // Outros erros (500, 400) param o loop
+        } else {
+            echo 'CNPJ não encontrado.';
+            break;
         }
     }
 
@@ -94,6 +101,7 @@ if ($tamanho === 11) {
         'mensagem'  => 'Limite de requisições excedido. Tente novamente em instantes.',
         'tipo_erro' => $httpCode,
     ]);
+
 
 } else {
     echo json_encode([

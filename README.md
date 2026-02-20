@@ -106,3 +106,10 @@ Consulte o documento de **Fluxo de Trabalho do Projeto** para mais detalhes.
 O **Consultor CNPJ** é um projeto voltado para aprendizado, organização e boas práticas no desenvolvimento web, podendo evoluir facilmente para uma aplicação mais robusta no futuro.
 
 Contribuições são bem-vindas 🚀
+
+---
+
+## 👥 Colaboradores
+
+* **Caio Leonni** - [GitHub](https://github.com/Leonsis)
+* **Johny Oliveira** - [GitHub](https://github.com/johny-santos)

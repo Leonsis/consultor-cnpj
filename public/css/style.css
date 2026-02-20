@@ -1,84 +1,129 @@
-.body-class{
+.body-class {
     background-color: #001f3f !important;
 }
 
-.main-column-cor{
+.main-column-cor {
     background-color: #e8e8e8;
-} 
+}
 
-.h1-column-style{
+.h1-column-style {
     text-shadow: 4px 5px 5px rgba(0, 0, 0, 0.3);
 }
 
-.hr-style{
+.hr-style {
     color: rgb(171, 171, 171);
 }
 
-.column-specific-styles{
-    background-color: rgb(211, 211, 211); 
-    border-radius: 10px; 
+.column-specific-styles {
+    background-color: rgb(211, 211, 211);
+    border-radius: 10px;
     height: 250px;
 }
 
-.column-variate-styles{
+.column-variate-styles {
     background-color: #e8e8e8;
 }
 
-.labels-inputs-styles{
+.labels-inputs-styles {
     background-color: #e8e8e8;
 }
 
-.input-class-styles{
-    width: 40px; 
+.input-class-styles {
+    width: 40px;
     height: 40px;
 }
 
-.button-class-styles{
-    background-color: #001f3f; 
-    height: 33px; 
+.button-class-styles {
+    background-color: #001f3f;
+    height: 33px;
 }
 
-.image-class-styles{
+.image-class-styles {
     width: 55%;
 }
 
-  @media(max-width: 991px) {
-            .image-one{
-                margin-bottom: 20px;
-            }
-            
-            .image-two{
-                margin-top: 20px;
+/* /* Mantém o comportamento de desktop grande até o limite do tablet */
 
-            }     
-        }
+/* @media (min-width: 991px) and (max-width: 1199px) {
+  .main-div-control {
+    width: 1200px !important; 
+    max-width: none; 
+    margin: 0 auto; 
+    overflow-x: auto; 
+  }
 
-    @media(max-width: 575px) {
-         .image-two-small{
-            margin-top: 15px;
-         }
+  .control-label-CNPJ{
+    width: none;
+  }
+}  */
+
+
+@media (min-width: 991px) and (max-width: 1199px) {
+
+    /* Libera o container para ocupar o espaço necessário */
+    .main-div-control {
+        max-width: 100% !important;
+        width: auto !important;
+        margin: 0 20px !important;
+        /* Margem de segurança nas bordas */
     }
-    @media(max-width: 575px){
-        .check-box-size{
-            font-size: 11px;
-        }
-    }  
-    
-    
+
+    /* Ajusta a largura do campo "Não sou um robô" que estava travada em w-75 */
+    .control-label-CNPJ {
+        width: 65% !important;
+        /* Aumenta um pouco para não espremer o texto */
+        min-width: 200px;
+    }
+
+    /* Reduz um pouco o padding da linha para ganhar espaço interno */
+    .main-column-cor {
+        padding: 2rem !important;
+        /* Diminui o p-5 que é muito largo */
+    }
+}
+
+
+@media(max-width: 991px) {
+    .image-one {
+        margin-bottom: 20px;
+    }
+
+    .image-two {
+        margin-top: 20px;
+
+    }
+}
+
+@media(max-width: 575px) {
+    .image-two-small {
+        margin-top: 15px;
+    }
+}
+
+@media(max-width: 575px) {
+    .check-box-size {
+        font-size: 11px;
+    }
+}
+
+
 
 .w-87 {
-  width: 87% !important; /* !important ensures it overrides other Bootstrap utilities */
-}    
+    width: 87% !important;
+    /* !important ensures it overrides other Bootstrap utilities */
+}
 
-.dark-blue-color{
+.dark-blue-color {
     color: #001f3f;
 }
 
 .custom-header {
-    --bs-table-bg: #001f3f !important; /* Sua cor específica */
+    --bs-table-bg: #001f3f !important;
+    /* Sua cor específica */
     color: white !important;
 }
 
-table td.custom-header b{
-    color: white !important;           /* Garante que o texto fique legível */
+table td.custom-header b {
+    color: white !important;
+    /* Garante que o texto fique legível */
 }

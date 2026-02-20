@@ -14,8 +14,9 @@
 
 <body class="body-class">
 
-    <div class="container mt-5 mb-5">
-        <div class="row rounded p-5 shadow justify-content-center text-center align-items-center main-column-cor m-4">
+    <div class="container mt-5 mb-5 main-div-control">
+        <div
+            class="row rounded p-5 shadow justify-content-center text-center align-items-center main-column-cor m-4 main-column-cor">
 
             <div class="col-lg-4 col-md-12 image-one">
                 <h1 class="fw-bold h1-column-style">Consulta CPF e CNPJ</h1>
@@ -33,7 +34,7 @@
                     </div>
 
                     <div
-                        class="d-flex align-items-center border border-dark rounded p-3 w-75 mx-auto labels-inputs-styles">
+                        class="d-flex align-items-center border border-dark rounded p-3 w-75 mx-auto labels-inputs-styles main-div-control control-label-CNPJ">
                         <input type="checkbox" id="opcao1"
                             class="form-check-input border-dark m-0 labels-inputs-styles input-class-styles"
                             name="interesse" value="newsletter">
@@ -43,6 +44,7 @@
                     <button type="submit" class="mt-3 w-75 mx-auto text-white fw-bold rounded-pill button-class-styles">
                         Consultar
                     </button>
+
                 </div>
             </form>
 
@@ -57,7 +59,8 @@
 
 
 
-        <div class="vstack gap-2 main-column-cor rounded" id="divPrincipal" style="display: none;"> <!-- deixar display none -->
+        <div class="vstack gap-2 main-column-cor rounded" id="divPrincipal" style="display: none;">
+            <!-- deixar display none -->
             <div class="container">
                 <h1 class="text-center p-2 dark-blue-color">Consulta de CPF/CNPJ</h1>
 
@@ -90,9 +93,22 @@
         // Ajax
         document.getElementById('form').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
 
             const formData = new FormData(e.target);
+            const elementResult = document.getElementById('result');
+            const divPrincipal = document.getElementById("divPrincipal");
+
+            divPrincipal.style.display = "flex";
+
+            elementResult.innerHTML = `
+            <div class="d-flex flex-column align-items-center">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+                <p class="mt-3 fw-bold">Buscando CNPJ, aguarde...</p>
+            </div>
+           `
 
             // ESTA ROTA DEVE SER MODIFICADA COM BASE NA SUA ESTRUTURA DE PASTA!  
             const response = await fetch('/Projetos/consultor-cnpj/backend/consultar-cnpj.php', {
@@ -105,27 +121,19 @@
             /* console.log('Retorno bruto:', text); */
 
             let result;
+
             try {
                 result = JSON.parse(text);
             } catch (e) {
+
                 alert('Erro: resposta inválida do servidor\n Mais detalhes no console.');
                 console.log('Erro:' + e);
                 return;
             }
-            
-            /*  var tentativa = document.getElementById("mainInput").value;
-             console.log(tentativa.length);
-            */
-        
-        //if(document.getElementById("mainInput").value.lenght === 18){
-         //   console.log("Teste");
-         
-             
- 
-            const elementResult = document.getElementById('result');
-            document.getElementById("divPrincipal").style.display = "flex";
 
-            if(elementResult.innerHTML.trim() !== "") {                
+
+
+            if (elementResult.innerHTML.trim() !== "") {
                 elementResult.innerHTML = '';
             };
 
@@ -140,163 +148,303 @@
             const td0 = document.createElement("td");
             td0.classList.add('custom-header', 'd-flex', 'align-items-center', 'justify-content-center');
 
-         if(result.tipo === 'CPF'){
-             td0.innerHTML = ` <b>${result.mensagem}</b>`;
+
+            if (result.tipo === 'CPF') {
+
+                td0.innerHTML = ` <b>${result.mensagem}</b>`;
 
                 tr1.appendChild(td0);
                 thead1.appendChild(tr1);
                 table1.appendChild(tr1);
                 elementResult.appendChild(table1);
+
                 return;
 
-         } else {
-            const elementResult = document.getElementById('result');
-            
-            
-            if(elementResult.innerHTML.trim() !== "") {                
-                elementResult.innerHTML = '';
-            } 
+            } else {
 
-            document.getElementById("divPrincipal").style.display = "flex";
+                const elementResult = document.getElementById('result');
 
-            const table1 = document.createElement("table");
-            table1.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'rounded' );
 
-            const thead1 = document.createElement("thead");
-            thead1.classList.add('custom-header');
+                if (elementResult.innerHTML.trim() !== "") {
+                    elementResult.innerHTML = '';
+                }
 
-            const tr1 = document.createElement("tr");
+                document.getElementById("divPrincipal").style.display = "flex";
 
-            const td1 = document.createElement("td");
-            td1.classList.add('custom-header');
+                const table1 = document.createElement("table");
+                table1.classList.add('table', 'table-bordered', 'table-hover', 'table-bordered', 'border-dark');
 
-            // erro tratado
-            if (result.erro) {
-                td1.innerHTML = `<b>${result.mensagem}</b>`;
+                const thead1 = document.createElement("thead");
+                thead1.classList.add('custom-header');
+
+                const tr1 = document.createElement("tr");
+
+                const primeiraTbody = document.createElement("tbody");
+
+                const td1 = document.createElement("td");
+                td1.classList.add('custom-header');
+
+                // erro tratado
+                if (result.erro) {
+
+                    td1.innerHTML = `<b>${result.mensagem}</b>`;
+
+                    tr1.appendChild(td1);
+                    td1.classList.add('border-0', 'text-center');
+
+                    thead1.appendChild(tr1);
+
+                    table1.appendChild(tr1);
+
+                    elementResult.appendChild(table1);
+
+                    return;
+                }
+                // console.log('teste')
+                // sucesso
+                td1.innerHTML = `<b>${result.razao_social}</b>`
 
                 tr1.appendChild(td1);
                 thead1.appendChild(tr1);
-                table1.appendChild(tr1);
+                table1.appendChild(thead1);
+
+                const tr2 = document.createElement("tr");
+                const td2 = document.createElement("td");
+                const div1 = document.createElement("div");
+                div1.classList.add('text-black');
+                div1.innerHTML = `<b>CNPJ:</b> ${result.cnpj.replace(
+                    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+                    "$1.$2.$3/$4-$5"
+                )}`
+
+                /*
+                    tbody5.appendChild(tr9);
+                    table3.appendChild(tbody5);
+                 */
+
+                tr2.appendChild(td2);
+                td2.appendChild(div1);
+                table1.appendChild(tr2);
+
                 elementResult.appendChild(table1);
-                return;
+
+                const table2 = document.createElement("table");
+                table2.classList.add('table', 'table-bordered', 'table-hover', 'mb-4', 'table-bordered', 'border-dark');
+
+                const thead2 = document.createElement("thead");
+                thead2.classList.add('custom-header');
+                const tr3 = document.createElement("tr");
+                const th1 = document.createElement("th");
+                th1.colSpan = "2";
+                th1.classList.add("custom-header");
+                th1.innerHTML = 'Cartão CNPJ';
+
+                tr3.appendChild(th1);
+                thead2.appendChild(tr3);
+                table2.appendChild(thead2);
+
+
+                const tbodyGeral = document.createElement("tbody");
+
+                const tr4 = document.createElement("tr");
+                const td3 = document.createElement("td");
+                td3.innerHTML = `<b>Razão social:</b> ${result.razao_social}`;
+
+
+                var situacaoCadastral = result.situacao_cadastral;
+
+                if (result.situacao_cadastral === 1) {
+                    situacaoCadastral = "Empresa Nula";
+                } else if (result.situacao_cadastral === 2) {
+                    situacaoCadastral = "Empresa Ativa";
+                } else if (result.situacao_cadastral === 3) {
+                    situacaoCadastral = "Empresa Suspensa";
+                } else if (result.situacao_cadastral === 4) {
+                    situacaoCadastral = "Empresa Inapta";
+                } else if (result.situacao_cadastral === 8) {
+                    situacaoCadastral = "Empresa Baixada";
+                }
+
+                const td4 = document.createElement("td");
+                td4.innerHTML = `<b>Situação Cadastral:</b> ${situacaoCadastral}`;
+
+                tr4.appendChild(td3);
+                tr4.appendChild(td4);
+                tbodyGeral.appendChild(tr4);
+
+                const dataExibicao = result.data_inicio_atividade
+                    ? new Date(result.data_inicio_atividade.replace(/-/g, '\/')).toLocaleDateString('pt-BR')
+                    : "Não informada";
+
+                const tr5 = document.createElement("tr");
+                tr5.innerHTML = `<td><b>Data abertura:</b> ${dataExibicao} </td><td><b>Natureza jurídica:</b> ${result.natureza_juridica}</td>`;
+                tbodyGeral.appendChild(tr5);
+
+
+                var emailExibicao = result.email;
+                if (result.email === null || result.email === "") {
+                    emailExibicao = "Nenhum e-mail associado ao CNPJ.";
+                }
+
+                const tr6 = document.createElement("tr");
+                tr6.innerHTML = `<td><b>Capital social:</b> ${result.capital_social}</td><td><b>E-mail:</b> ${emailExibicao}</td>`;
+                tbodyGeral.appendChild(tr6);
+
+
+                const tr7 = document.createElement("tr");
+                tr7.innerHTML = `<td><b>Telefone:</b> ${result.ddd_telefone_1}</td><td><b>CNAE:</b> ${result.cnae_fiscal}</td>`;
+                tbodyGeral.appendChild(tr7);
+
+                table2.appendChild(tbodyGeral);
+                elementResult.appendChild(table2);
+
+                const table3 = document.createElement("table");
+                table3.classList.add('table', 'table-bordered', 'table-hover', 'table-bordered', 'border-dark');
+
+                const thead3 = document.createElement("thead");
+                const tr8 = document.createElement("tr");
+                const th2 = document.createElement("th");
+
+                th2.colSpan = "2";
+                th2.classList.add("custom-header");
+                th2.innerHTML = 'Endereço';
+
+                tr8.appendChild(th2);
+                thead3.appendChild(tr8);
+                table3.appendChild(thead3);
+
+
+                const tbody5 = document.createElement("tbody");
+                const tr9 = document.createElement("tr");
+
+                const tdLogradouro = document.createElement("td");
+                tdLogradouro.innerHTML = `<b>Logradouro:</b> ${result.logradouro}`;
+
+                const tdNumero = document.createElement("td");
+                tdNumero.innerHTML = `<b>Número:</b> ${result.numero}`;
+
+                tr9.appendChild(tdLogradouro);
+                tr9.appendChild(tdNumero);
+
+                tbody5.appendChild(tr9);
+                table3.appendChild(tbody5);
+
+                elementResult.appendChild(table3);
+
+                const tr10 = document.createElement("tr");
+
+                const tdComplemento = document.createElement("td");
+                tdComplemento.innerHTML = `<b>Complemento:</b> ${result.complemento || 'Não encontrado.'}`
+
+                const tdBairro = document.createElement("td");
+                tdBairro.innerHTML = `<b>Bairro:</b> ${result.bairro}`
+
+                tr10.appendChild(tdComplemento);
+                tr10.appendChild(tdBairro);
+                tbody5.appendChild(tr10);
+
+                elementResult.appendChild(table3);
+
+                const tr11 = document.createElement("tr");
+
+                const tdMunicipio = document.createElement("td");
+                tdMunicipio.innerHTML = `<b>Município:</b> ${result.municipio}`
+
+                const tdUF = document.createElement("td");
+                tdUF.innerHTML = `<b>UF:</b> ${result.uf}`;
+
+                tr11.appendChild(tdMunicipio);
+                tr11.appendChild(tdUF);
+                tbody5.appendChild(tr11)
+
+                elementResult.appendChild(table3);
+
+                const tr12 = document.createElement("tr");
+
+                const tdCEP = document.createElement("td");
+                tdCEP.innerHTML = `<b>CEP:</b> ${result.cep}`;
+
+                const tdCodMunicipio = document.createElement("td");
+                tdCodMunicipio.innerHTML = `<b>Código Município:</b> ${result.codigo_municipio}`;
+
+                tr12.appendChild(tdCEP);
+                tr12.appendChild(tdCodMunicipio);
+                tbody5.appendChild(tr12);
+
+                elementResult.appendChild(table3);
+
+                const table4 = document.createElement("table");
+                table4.classList.add('table', 'table-bordered', 'table-hover', 'table-bordered', 'border-dark');
+
+                const thead4 = document.createElement("thead");
+                const tr13 = document.createElement("tr");
+                const th3 = document.createElement("th");
+
+                th3.colSpan = "2";
+                th3.classList.add("custom-header");
+                th3.innerHTML = 'CNAE';
+
+                tr13.appendChild(th3);
+                thead4.appendChild(tr13);
+                table4.appendChild(thead4);
+
+                const tbody6 = document.createElement("tbody");
+                const tr14 = document.createElement("tr");
+
+                const tdCNAE = document.createElement("td");
+                tdCNAE.innerHTML = `<b>CNAE:</b>`;
+
+                const tdDescriCnae = document.createElement("td");
+                tdDescriCnae.innerHTML = `${result.cnae_fiscal_descricao}`;
+
+                tr14.appendChild(tdCNAE);
+                tr14.appendChild(tdDescriCnae);
+
+                tbody6.appendChild(tr14);
+                table4.appendChild(tbody6);
+
+                elementResult.appendChild(table4);
+
+                const tr15 = document.createElement("tr");
+
+                const tdCnaeSec = document.createElement("td");
+                tdCnaeSec.innerHTML = `<b>CNAEs secundários:</b>`
+
+                const tdCnaeSecDesc = document.createElement("td");
+
+                const listaSecundarios = result.cnaes_secundarios || [];
+
+                const cnaesValidos = listaSecundarios.filter(item =>
+                    item.codigo !== 0 &&
+                    item.codigo !== "0" &&
+                    item.descricao &&
+                    item.descricao.trim() !== ""
+                );
+
+                if (cnaesValidos.length > 0) {
+                    //vamos unir todas as descrições em um único texto separado por '/'
+                    tdCnaeSecDesc.innerHTML = listaSecundarios
+                        .map(item => `<b>${item.codigo}</b> - ${item.descricao}`)
+                        .join("<br>");
+
+                } else {
+                    tdCnaeSecDesc.innerHTML = "Não posssui CNAEs secundários."
+                }
+
+                /*  const tdCnaeSecDesc2 = document.createElement("td");
+                 tdCnaeSecDesc2.innerHTML = `${result.cnaes_secundarios[1].descricao}` */
+
+                tr15.appendChild(tdCnaeSec);
+                tr15.appendChild(tdCnaeSecDesc);
+                /* tr15.appendChild(tdCnaeSecDesc2); */
+
+                tbody6.appendChild(tr15);
+                table4.appendChild(tbody6);
+
+                elementResult.appendChild(table4);
+
             }
-
-            // sucesso
-            td1.innerHTML = `<b>${result.razao_social}</b>`
-
-            tr1.appendChild(td1);
-            thead1.appendChild(tr1);
-            table1.appendChild(thead1);
-
-            const tr2 = document.createElement("tr");
-            const td2 = document.createElement("td");
-            const div1 = document.createElement("div");
-            div1.classList.add('text-black');
-            div1.innerHTML = `<b>CNPJ:</b> ${result.cnpj.replace(
-                /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-                "$1.$2.$3/$4-$5"
-            )}`
-
-            tr2.appendChild(td2);
-            td2.appendChild(div1);
-            table1.appendChild(tr2);
-
-            elementResult.appendChild(table1);
-
-            const table2 = document.createElement("table");
-            table2.classList.add('table', 'table-striped', 'table-bordered', 'table-hover');
-
-
-            const thead2 = document.createElement("thead");
-            thead2.classList.add('custom-header');
-
-            const tr3 = document.createElement("tr");
-
-            //const td3 = document.createElement("td");
-
-            const th1 = document.createElement("th");
-            th1.colSpan = "2";
-            th1.classList.add("custom-header")
-            th1.innerHTML = 'Cartão CNPJ'
-
-            table2.appendChild(thead2);
-            thead2.appendChild(tr3);
-            tr3.appendChild(th1);
-            elementResult.appendChild(table2);
-
-            const tbody = document.createElement("tbody");
-
-            const tr4 = document.createElement("tr");
-
-            const td3 = document.createElement("td");
-            td3.innerHTML = `<b>Razão social:</b> ${result.razao_social}`;
-
-            var situacaoCadastral = result.situacao_cadastral;
-
-            if(result.situacao_cadastral === 1 ){
-                situacaoCadastral = "Empresa Nula";
-            }else if(result.situacao_cadastral === 2){
-                situacaoCadastral = "Empresa Ativa";
-            }else if(result.situacao_cadastral === 3){
-                situacaoCadastral = "Empresa Suspensa";
-            }else if(result.situacao_cadastral === 4){
-                situacaoCadastral = "Empresa Inapta";
-            }else if(result.situacao_cadastral === 8){
-                situacaoCadastral = "Empresa Baixada";
-            } 
-
-            const td4 = document.createElement("td");
-            td4.innerHTML = `<b>Situação Cadastral:</b> ${situacaoCadastral}`
-
-            table2.appendChild(tbody);
-            tbody.appendChild(tr4);
-            tr4.appendChild(td3);
-            tr4.appendChild(td4);
-            elementResult.appendChild(table2);
-
-           /*  const dataApi = result.data_inicio_atividade;
-            const dataFormatoBr = dataApi.toLocaleDateString('pt-BR'); */
-
-            const dataExibicao = result.data_inicio_atividade 
-                ? new Date(result.data_inicio_atividade.replace(/-/g, '\/')).toLocaleDateString('pt-BR') 
-                : "Não informada";
-
-            const tbody2 = document.createElement("tbody");
-            const tr5 = document.createElement("tr");
-            tr5.innerHTML = `<td><b>Data abertura:</b> ${dataExibicao} </td><td><b>Natureza jurídica:</b> ${result.natureza_juridica}</td>`;
-            tbody2.appendChild(tr5);
-            table2.appendChild(tbody2);
-
-            var emailExibicao = result.emai; 
-            if(result.email === null || result.email === ""){
-                emailExibicao = "Nenhum e-mail associado ao CNPJ."
-            }
-
-            const tbody3 = document.createElement("tbody");
-            const tr6 = document.createElement("tr");
-            tr6.innerHTML = `<td><b>Capital social:</b> ${result.capital_social}</td><td><b>E-mail:</b> ${emailExibicao}</td>`;
-            tbody3.appendChild(tr6);
-            table2.appendChild(tbody3);
-
-
-            const tbody4 = document.createElement("tbody");
-            const tr7 = document.createElement("tr");
-            tr7.innerHTML = `<td><b>Telefone:</b> ${result.ddd_telefone_1}</td><td><b>CNAE:</b> ${result.cnae_fiscal}</td>`;
-            tbody4.appendChild(tr7);
-            table2.appendChild(tbody4);
-         
-          
-
-
-        }   
-            /* elementResult.innerHTML = `
-                ${result.razao_social}
-                ${result.situacao_cadastral}
-              `; */
-       });
-         
-            
- 
+        });
     </script>
 </body>
 
